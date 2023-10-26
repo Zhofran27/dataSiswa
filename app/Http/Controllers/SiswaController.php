@@ -18,6 +18,14 @@ class SiswaController extends Controller
         return view('siswa', compact('data'));
     }
 
+    public function search(Request $request)
+    {
+        $keyword = $request->cari; //cari adalah name dari input
+        $data =Siswa::where('nis', 'like', "%" . $keyword . "%")->paginate(5);
+
+        return view('siswa', compact(['data']))->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+
     
 
     /**
@@ -94,7 +102,8 @@ class SiswaController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $data=Siswa::find($id);
+        return view('siswa',compact('data'));
     }
 
     /**
@@ -102,7 +111,54 @@ class SiswaController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $this->validate($request, [
+            'nis' => 'required',
+            'nm' => 'required',
+            'kls' => 'required',
+            'jkl' => 'required',
+            'tlp' => 'required',
+            'alamat' => 'required',
+            'foto' => 'mimes:jpg,jpeg,png|max:2048'
+        ]);
+
+        $upd = Siswa::find($id);
+
+        if($request->file('foto') == "") {
+        $upd->update([
+            'nis' => $request->nis,
+            'nama' => $request->nm,
+            'kelas' => $request->kls,
+            'jenis_kelamin' => $request->jkl,
+            'telp' => $request->tlp,
+            'alamat_domisili' => $request->alamat,
+        ]);
+        } else {
+        //proses upload gambar baru
+        $image = $request->file('foto');
+
+        $image->move(public_path('foto'),$image->getClientOriginalName());
+
+        $upd ->update([
+            'nis' => $request->nis,
+            'nama' => $request->nm,
+            'kelas' => $request->kls,
+            'jenis_kelamin' => $request->jkl,
+            'telp' => $request->tlp,
+            'alamat_domisili' => $request->alamat,
+            'foto' => $image->getClientOriginalName()
+        ]);
+        }
+        if($upd){
+        //redirect dengan pesan sukses
+        Alert::success('Ubah Data', 'data siswa sukses diubah');
+
+        return redirect('/');
+        }else{
+
+        //redirect dengan pesan error
+        Alert::error('Ubah Data', 'data siswa gagal di ubah');
+        return redirect('/');
+        }
     }
 
     /**
@@ -110,6 +166,18 @@ class SiswaController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $del=Siswa::find($id);
+        $del->delete();
+        if($del){
+            //redirect dengan pesan sukses
+            Alert::success('Hapus Data', 'data siswa sukses diHapus');
+            
+            return redirect('/');
+            }else{
+            //redirect dengan pesan error
+            Alert::error('Hapus Data', 'data siswa gagal diHapus');
+            
+            return redirect('/');
+            }
     }
 }

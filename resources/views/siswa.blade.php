@@ -45,8 +45,8 @@
             <td>{{$ds->telp}}</td>
             <td>{{$ds->alamat_domisili}}</td>
             <td>
-                <button type="button" class="btn btn-warning btn-sm">Ubah</button>
-                <button type="button" class="btn btn-danger btn-sm">Hapus</button>
+                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#ubah{{ $ds->id }}">Ubah</button>
+                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#hapus{{ $ds->id }}">Hapus</button>
             </td>
           </tr>
           @endforeach
@@ -106,4 +106,84 @@
         </div>
       </div>
     </div>
+
+<!-- Modal hapus -->
+@foreach($data as $ds)
+<div class="modal fade" id="hapus{{$ds->id}}" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria- labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Data Siswa</h1>
+        <button type="button" class="btn-close" data-bs- dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h4 class="text-center">Apakah anda yakin menghapus data siswa <span>
+            <font color="blue">{{$ds->nama}}
+            </font>
+          </span>
+        </h4>
+      </div>
+      <div class="modal-footer">
+        <form action="/{{$ds->id}}" method="POST"> 
+          @csrf 
+          @method('delete') 
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tidak Jadi</button>
+          <button type="submit" class="btn btn-danger">Hapus!</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+@endforeach
+
+<!-- Modal ubah-->
+<div class="modal fade" id="ubah{{$ds->id}}" data-bs- backdrop="static" data-bs-keyboard="false" tabindex="-1" aria- labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"> 
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Simpan Data Siswa</h1>
+        <button type="button" class="btn-close" data-bs- dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form class="form" action="/{{$ds->id}}" method="POST" enctype="multipart/form-data"> @csrf @method('PUT') <div class="mb-3">
+            <label class="form-label">NIS</label>
+            <input type="text" class="form-control" name="nis" value="{{$ds->nis}}">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Nama</label>
+            <input type="text" class="form-control" name="nm" value="{{$ds->nama}}">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Kelas</label>
+            <input type="text" class="form-control" name="kls" value="{{$ds->kelas}}">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Jenis Kelamin</label>
+            <select class="form-select" name="jkl">
+              <option value="{{$ds->jenis_kelamin}}" selected>{{$ds->jenis_kelamin}}</option>
+              <option value="laki-laki">Laki-Laki</option>
+              <option value="perempuan">Perempuan</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Telp</label>
+            <input type="text" class="form-control" name="tlp" value="{{$ds->telp}}">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Alamat Domisili</label>
+            <textarea class="form-control" name="alamat" rows="3">{{$ds->alamat_domisili}}</textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Foto Siswa:</label>
+            <input class="form-control" type="file" name="foto" value="">
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data- bs-dismiss="modal">Tutup</button>
+        <button type="submit" class="btn btn-primary">Simpan</button>
+      </div> @2023 RPL- Siswanto </form>
+    </div>
+  </div>
+</div>
+
   @endsection
