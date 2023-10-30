@@ -64,18 +64,18 @@ class SiswaController extends Controller
             }elseif($request->hasFile('foto')) {
             $image = $request->file('foto');
             
-            $image->move(public_path('foto'),$image->getClientOriginalName());
             
             $simpan = Siswa::create([
-            'nis' => $request->nis,
-            'nama' => $request->nm,
-            'kelas' => $request->kls,
-            'jenis_kelamin' => $request->jkl,
-            'telp' => $request->tlp,
-            'alamat_domisili' => $request->alamat,
-            'foto' => $image->getClientOriginalName()
+                'nis' => $request->nis,
+                'nama' => $request->nm,
+                'kelas' => $request->kls,
+                'jenis_kelamin' => $request->jkl,
+                'telp' => $request->tlp,
+                'alamat_domisili' => $request->alamat,
+                'foto' => $image->getClientOriginalName()
             ]);
-            }
+            $image->move(public_path('foto'),$image->getClientOriginalName());
+        }
             if($simpan){
             //redirect dengan pesan sukses
             Alert::success('Simpan Data', 'data siswa sukses diSimpan');

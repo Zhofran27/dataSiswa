@@ -10,5 +10,5 @@ class Siswa extends Model
     use HasFactory;
     protected $guarded = ['id'];
     protected $table = 'siswa';
-    public $timestamp = false;
+    public $timestamps = false;
 }

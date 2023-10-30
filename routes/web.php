@@ -19,7 +19,8 @@ Route::get('/', function () {
 });
 
 Route::resource('/',SiswaController::class);
-Route::get('/',[SiswaController::class,'search'])->name{'cari'};
+Route::post('/',[SiswaController::class,'store']);
+Route::get('/',[SiswaController::class,'search'])->name('cari');
 Route::delete('/{id}',[SiswaController::class,'destroy']);
 Route::get('/{id}',[SiswaController::class,'edit']);
 Route::put('/{id}',[SiswaController::class,'update']);
